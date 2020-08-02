@@ -20,6 +20,8 @@ timeWidget.pack(side=TOP, fill=X)
 frame = LabelFrame(window, bg='black', bd=0)
 frame.pack(side=TOP, fill=X)
 
+news = LabelFrame(window,bg='black', bd=0)
+news.pack(side = BOTTOM, fill = X)
 
 # Get current time and format it
 def time():
@@ -268,10 +270,57 @@ weather.pack(side=RIGHT)
 Temperature.pack(side=RIGHT)
 forecast.pack(side=RIGHT)
 
+
+
+global addon
+addon = ['','','','']
+
+title = Label(news, text= 'News', font=("Helvetica", 25), bg="firebrick4", fg="white")
+title.pack(anchor=W, side=TOP, fill = X)
+
+
+def info():
+    url = ('http://newsapi.org/v2/top-headlines?'
+           'country=sg&'
+           'apiKey=3545ad411b8f4ea186651c6135088342')
+    response = requests.get(url)
+    news = response.json()
+
+    source = ['','','','','','','','','','','','','','','','','','','','','']
+    infomation = ['','','','','','','','','','','','','','','','','','','','','']
+    #addon = ['','','','']
+
+
+    for x in range(len(news['articles'])):
+        source[x] = news['articles'][x]['source']['name']
+
+        if source[x] == 'CNA':
+            infomation[x] = news['articles'][x]['title']
+        else:
+            infomation[x] = ''
+
+    while ("" in infomation):
+        infomation.remove("")
+
+
+
+    for x in range(3):
+        addon[x].config(text=infomation[x])
+
+
+    window.after(30000, info)
+
+
+for x in range(3):
+    addon[x] = Label(news, text='', font=("Helvetica", 15), bg="black", fg="white")
+    addon[x].pack(anchor=NW, side=TOP)
+
+
 #run the functions
 time()
 getWeather()
 data()
+info()
 
 #Set GUI to fullscreen
 window.attributes("-fullscreen", True)
